@@ -56,4 +56,18 @@ const authUser = expressAsyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser };
+// /api/user?search=manya
+const allUsers = expressAsyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } }, //regex is used to search for a pattern in the name field, and $options: "i" makes the search case-insensitive
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } }); // return everyone except the logged in user
+  res.send(users);
+});
+
+module.exports = { registerUser, authUser, allUsers };
