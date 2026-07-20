@@ -22,10 +22,10 @@ const HomePage = () => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     setUser(userInfo);
 
-    if (!userInfo) {
+    if (userInfo) {
       navigate("/chats");
     }
-  }, []);
+  }, [navigate, setUser]);
 
   return (
     <Container maxW="xl" centerContent>
